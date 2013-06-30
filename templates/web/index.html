@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+	<ul>
+	{% for row in latests %}
+	<li>{{ row.content }}</li>
+	{% endfor %}	
+	</ul>
+</div>
+{% endblock %}
