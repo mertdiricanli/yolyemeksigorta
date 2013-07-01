@@ -1,10 +1,25 @@
 {% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
 {% block content %}
-<div class="container">
-	<ul>
-	{% for row in latests %}
-	<li>{{ row.content }}</li>
-	{% endfor %}	
-	</ul>
-</div>
+	<div class="hero-unit">
+		<h2>Yol, yemek, sigorta varsa;</h2>
+		<p>"Arı gibi çalışırım hacı ama at gibi uyurum bak onu da açık söyliyim.."</p>
+	</div>
+	<div class="well">
+		<h3>Son yazılanlar</h3>
+		{% for row in latests %}
+		<div class="postWrapper">
+			<a class="avatar" href="">
+				<img class="avatar" src="{{ row.gravatar_url }}">
+			</a>
+			{{ row.author.first_name }} {{ row.author.last_name }}: 
+			<span class="name">{{ row.company.companyname }}</span>
+			({{ row.category }})
+			<span class="time">{{ row.timestamp }}</span>
+			<p>{{ row.content }}</p>
+		</div>
+		{% endfor %}
+	</div>
 {% endblock %}

@@ -28,6 +28,8 @@ class Post(models.Model):
 	author = models.ForeignKey(User)
 	content = models.TextField()
 	timestamp = models.DateField(auto_now_add=True)
+	def gravatar_url(self):
+		return "http://www.gravatar.com/avatar/%s?s=50" % hashlib.md5(self.author.email).hexdigest()
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User)
