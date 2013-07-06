@@ -3,9 +3,59 @@
 	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
 {% endblock %}
 {% block content %}
-	<div class="hero-unit">
-		<h2>Yol, yemek, sigorta varsa;</h2>
-		<p>"Arı gibi çalışırım hacı ama at gibi uyurum bak onu da açık söyliyim.."</p>
+	<div class="row-fluid">
+		<div class="well text-center span6">
+			<h2>Yol, yemek, sigorta varsa;</h2>
+			<p>"Arı gibi çalışırım hacı ama at gibi uyurum bak onu da açık söyliyim.."</p>
+			<br><br><br><br>
+		</div>
+		<div class="span6 well">
+			<h2>Söyleyeceklerim var üye olayım:</h2>
+			<form>
+				<div class="row span12">
+					<div class="control-group">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-user"></i></span>
+							<input class="input-large" type="text" placeholder="Kullanıcı Adı">
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-envelope"></i></span>
+							<input class="input-large" type="text" placeholder="Email">
+						</div>
+					</div>
+				</div>
+				<div class="row span12" style="margin-left:0px;">
+					<div class="control-group">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-lock"></i></span>
+							<input class="input-large" type="password" placeholder="Şifre">
+						</div>
+					</div>
+					<div class="contol-group">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-lock"></i></span>
+							<input class="input-large" type="password" placeholder="Şifre Tekrar">
+						</div>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<button type="submit" class="btn btn-success">Tamamdır!</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="well text-center">
+		<h2>Sigorta yapıyonuz mu sigorta?</h2>
+		<form class="form-search">
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-search"></i></span>
+				<input type="text" class="input-xlarge" placeholder="Şirket ismi ile arama yap!">
+			</div>
+			<button type="submit" class="btn btn-success">Ara</button>
+		</form>
 	</div>
 	<div class="well">
 		<h3>Son yazılanlar</h3>
