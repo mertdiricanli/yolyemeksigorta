@@ -8,14 +8,18 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 	url(r'^$', 'web.views.index'),
-    # Examples:
-    # url(r'^$', 'yolyemeksigorta.views.home', name='home'),
-    # url(r'^yolyemeksigorta/', include('yolyemeksigorta.foo.urls')),
+	url(r'^signup/$', 'web.views.signup'),
+	url(r'^login/$', 'web.views.login_view'),
+	url(r'^logout/$', 'web.views.logout_view'),
+	# Examples:
+	# url(r'^$', 'yolyemeksigorta.views.home', name='home'),
+	# url(r'^yolyemeksigorta/', include('yolyemeksigorta.foo.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	# Uncomment the admin/doc line below to enable admin documentation:
+	# url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT}),
+	# Uncomment the next line to enable the admin:
+	url(r'^admin/', include(admin.site.urls)),
+	url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT}),
+	
 )
