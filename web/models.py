@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import hashlib
 from django.template.defaultfilters import slugify
+from utils import downcode
 
 class Sector(models.Model):
 	sectorname = models.CharField(max_length=200)
@@ -18,7 +19,7 @@ class Company(models.Model):
 		return '%s' % self.companyname
 
 	def save(self, *args, **kwargs):
-		self.companyslug = slugify(self.companyname)
+		self.companyslug = slugify(downcode(self.companyname)) 
 		super(Company,self).save(*args, **kwargs)
 
 class Category(models.Model):
