@@ -3,6 +3,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.html import strip_tags
 from django import forms
+from web.models import Sector, Company
+from django.template.defaultfilters import slugify
 
 class CreateUserForm(UserCreationForm):
 	email = forms.EmailField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':'Email','class':'input-large'}))
@@ -31,5 +33,19 @@ class AuthForm(AuthenticationForm):
 		form = super(AuthForm,self).is_valid()
 		for f, error in self.errors.iteritems():
 			if f != '__all_':
-				self.fields[f].widget.attrs.update({'value': strip_tags(error)})
+				self.fields[f].widget.attrs.update({'placeholder': strip_tags(error)})
+		return form
+
+class CompanyForm(forms.ModelForm):
+	sector = forms.ModelChoiceField(queryset=Sector.objects.all(),empty_label="Lütfen Seçiniz", label="Sektör")
+	companyname = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder':'Şirket Adı'}), label="Şirket Adı")
+	class Meta:
+		model = Company
+		exclude = ['companyslug']
+
+	def is_valid(self):
+		form = super(CompanyForm,self).is_valid()
+		for f, error in self.errors.iteritems():
+			if f != '__all__':
+				self.fields[f].widget.attrs.update({'placeholder': strip_tags(error)})
 		return form

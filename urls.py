@@ -11,6 +11,7 @@ urlpatterns = patterns('',
 	url(r'^signup/$', 'web.views.signup'),
 	url(r'^login/$', 'web.views.login_view'),
 	url(r'^logout/$', 'web.views.logout_view'),
+	url(r'^sirket-ekle/$', 'web.views.addCompany'),
 	# Examples:
 	# url(r'^$', 'yolyemeksigorta.views.home', name='home'),
 	# url(r'^yolyemeksigorta/', include('yolyemeksigorta.foo.urls')),
@@ -21,5 +22,5 @@ urlpatterns = patterns('',
 	# Uncomment the next line to enable the admin:
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT}),
-	
+
 )

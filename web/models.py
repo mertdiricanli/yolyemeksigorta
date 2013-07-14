@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import hashlib
+from django.template.defaultfilters import slugify
 
 class Sector(models.Model):
 	sectorname = models.CharField(max_length=200)
@@ -15,6 +16,10 @@ class Company(models.Model):
 	companyslug = models.SlugField(max_length=200, unique=True)
 	def __unicode__(self):
 		return '%s' % self.companyname
+
+	def save(self, *args, **kwargs):
+		self.companyslug = slugify(self.companyname)
+		super(Company,self).save(*args, **kwargs)
 
 class Category(models.Model):
 	categoryname = models.CharField(max_length=200)
@@ -36,4 +41,6 @@ class UserProfile(models.Model):
 	follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
 	def gravatar_url(self):
 		return "http://www.gravatar.com/avatar/%s?s=50" % hashlib.md5(self.user.email).hexdigest()
+
+
 

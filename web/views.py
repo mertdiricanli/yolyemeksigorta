@@ -1,10 +1,11 @@
-# Create your views here.
+# -*- coding:utf-8 -*-
 from web.models import *
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from web.forms import CreateUserForm, AuthForm
+from web.forms import CreateUserForm, AuthForm, CompanyForm
+from django.db import IntegrityError
 
 def index(request, user_form=None, auth_form=None):
 	latestposts = Post.objects.all().order_by('-timestamp')[:5]
@@ -44,4 +45,23 @@ def login_view(request):
 def logout_view(request):
 	logout(request)
 	return redirect('/')
-	
+
+def addCompany(request):
+	try:
+		if request.method == 'POST':
+			form = CompanyForm(request.POST)
+			if form.is_valid():
+				form.clean()
+				form.save()
+				return redirect('/')
+		else:
+			form = CompanyForm()
+			# return render(request, 'web/addcompany.html',{'companyform':form,})
+
+		return render(request, 'web/addcompany.html',{'companyform':form,})
+
+	except IntegrityError:
+		message = 'Bu şirket daha önce eklenmiş..'
+		return render(request, 'web/addcompany.html',{'companyform':form, 'message': message,})
+
+
