@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+	<div class="well">
+		<h3>{{ company.companyname }} hakkında son yazılanlar</h3>
+		{% for row in posts %}
+		<div class="postWrapper">
+			<a class="avatar" href="http://www.gravatar.com/emails" target="_blank" title="gravatar.com'dan avatarınızı değiştirin!">
+				{% if not row.gravatar_url %}
+				<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
+				{% else %}
+				<img class="avatar" src="{{ row.gravatar_url }}">
+				{% endif %}
+				
+			</a>
+			<span class="name">{{ row.author.first_name }} {{ row.author.last_name }}</span>
+			<span class="time">{{ row.timestamp }}</span>
+			<p><strong>{{ row.category }}: </strong>{{ row.content }}</p>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

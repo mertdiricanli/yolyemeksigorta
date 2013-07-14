@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+	<div class="well span6">
+		<h2>Şirketler</h2>
+		<ul>
+		{% for company in companies %}
+			<li>{{ company.companyname }} <span class="sector">({{ company.sector }})</span></li>
+		{% endfor %}
+		</ul>
+	</div>
+	<div class="well span6">
+		<h2>Şirketler eksik kalmış hacı!</h2>
+		<form method="post" action="">{% csrf_token %}
+			{{ companyform.non_field_errors }}
+			{{ message }}
+			{% for sector in companyform %}
+			<label>{{ sector.label }}</label>
+			<div class="controls">
+				{{ sector }}
+			</div>
+			{% endfor %}
+			<div class="controls">
+				<button type="submit" class="btn btn-success">Ekle!</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

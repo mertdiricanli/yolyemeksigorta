@@ -61,14 +61,17 @@
 		<h3>Son yazılanlar</h3>
 		{% for row in latests %}
 		<div class="postWrapper">
-			<a class="avatar" href="">
+			<a class="avatar" href="http://www.gravatar.com/emails" target="_blank" title="gravatar.com'dan avatarınızı değiştirin!">
+				{% if not row.gravatar_url %}
+				<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
+				{% else %}
 				<img class="avatar" src="{{ row.gravatar_url }}">
+				{% endif %}
+				
 			</a>
-			{{ row.author.first_name }} {{ row.author.last_name }}: 
-			<span class="name">{{ row.company.companyname }}</span>
-			({{ row.category }})
+			<span class="name">{{ row.author.first_name }} {{ row.author.last_name }}</span>
 			<span class="time">{{ row.timestamp }}</span>
-			<p>{{ row.content }}</p>
+			<p><strong><a href="/sirketler/{{ row.company.companyslug }}">{{ row.company.companyname }}</a>, {{ row.category }}: </strong>{{ row.content }}</p>
 		</div>
 		{% endfor %}
 	</div>

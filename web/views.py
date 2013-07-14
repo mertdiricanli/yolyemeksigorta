@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from web.forms import CreateUserForm, AuthForm, CompanyForm
 from django.db import IntegrityError
+from django.http import Http404
 
 def index(request, user_form=None, auth_form=None):
 	latestposts = Post.objects.all().order_by('-timestamp')[:5]
@@ -46,22 +47,31 @@ def logout_view(request):
 	logout(request)
 	return redirect('/')
 
-def addCompany(request):
-	try:
-		if request.method == 'POST':
-			form = CompanyForm(request.POST)
-			if form.is_valid():
-				form.clean()
-				form.save()
-				return redirect('/')
-		else:
-			form = CompanyForm()
-			# return render(request, 'web/addcompany.html',{'companyform':form,})
+def companines(request, companyname=""):
+	if companyname:
+		try:
+			company = Company.objects.get(companyname=companyname)
+		except Company.DoesNotExist:
+			raise Http404
+		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
+		return render(request, 'web/company.html', {'posts':posts, 'company':company})
+	else:
+		try:
+			if request.method == 'POST':
+				form = CompanyForm(request.POST)
+				if form.is_valid():
+					form.clean()
+					form.save()
+					return redirect('/')
+			else:
+				listcompanies = Company.objects.all().order_by('companyname')[:8]
+				form = CompanyForm()
 
-		return render(request, 'web/addcompany.html',{'companyform':form,})
+			return render(request, 'web/companies.html',{'companyform':form, 'companies':listcompanies})
 
-	except IntegrityError:
-		message = 'Bu şirket daha önce eklenmiş..'
-		return render(request, 'web/addcompany.html',{'companyform':form, 'message': message,})
+		except IntegrityError:
+			message = 'Bu şirket daha önce eklenmiş..'
+			return render(request, 'web/companies.html',{'companyform':form, 'message': message,})
+
 
 
