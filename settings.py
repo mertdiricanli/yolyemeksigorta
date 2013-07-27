@@ -128,6 +128,7 @@ TEMPLATE_CONTEXT_PROCESSOR = {
 	'django.contrib.auth.context_processors.auth',
 	'django.core.context_processors.media',
 	'django.core.context_processors.csrf',
+	'yolyemeksigorta.context_processors.authform',
 }
 
 # A sample logging configuration. The only tangible logging

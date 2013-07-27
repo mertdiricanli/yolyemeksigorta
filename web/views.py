@@ -7,6 +7,12 @@ from django.contrib.auth.models import User
 from web.forms import CreateUserForm, AuthForm, CompanyForm
 from django.db import IntegrityError
 from django.http import Http404
+from django.http import HttpResponse
+
+def authform(request):
+	return{
+		'auth_form': AuthForm()
+	}
 
 def index(request, user_form=None, auth_form=None):
 	latestposts = Post.objects.all().order_by('-timestamp')[:5]
@@ -50,7 +56,7 @@ def logout_view(request):
 def companines(request, companyname=""):
 	if companyname:
 		try:
-			company = Company.objects.get(companyname=companyname)
+			company = Company.objects.get(companyslug=companyname)
 		except Company.DoesNotExist:
 			raise Http404
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
@@ -67,11 +73,18 @@ def companines(request, companyname=""):
 				listcompanies = Company.objects.all().order_by('companyname')[:8]
 				form = CompanyForm()
 
-			return render(request, 'web/companies.html',{'companyform':form, 'companies':listcompanies})
+			return render_to_response('web/companies.html',{'companyform':form, 'companies':listcompanies},context_instance=RequestContext(request, processors=[authform]))
 
 		except IntegrityError:
 			message = 'Bu şirket daha önce eklenmiş..'
 			return render(request, 'web/companies.html',{'companyform':form, 'message': message,})
 
-
+def search(request):
+	if 'q' in request.GET and request.GET['q']:
+		q = request.GET['q']
+		results = Company.objects.filter(companyname__icontains=q)
+		return render(request, 'web/search.html', {'results':results,})
+	else:
+		message = 'Aramak için bir şeyler yazın'
+		return HttpResponse(message)
 

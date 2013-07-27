@@ -17,7 +17,7 @@ class CreateUserForm(UserCreationForm):
 	def is_valid(self):
 		form = super(CreateUserForm,self).is_valid()
 		for f, error in self.errors.iteritems():
-			if f != '__all_':
+			if f != '__all__':
 				self.fields[f].widget.attrs.update({'class':'error', 'value': strip_tags(error)})
 		return form
 
@@ -32,7 +32,7 @@ class AuthForm(AuthenticationForm):
 	def is_valid(self):
 		form = super(AuthForm,self).is_valid()
 		for f, error in self.errors.iteritems():
-			if f != '__all_':
+			if f != '__all__':
 				self.fields[f].widget.attrs.update({'placeholder': strip_tags(error)})
 		return form
 

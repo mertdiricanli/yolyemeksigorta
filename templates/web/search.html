@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+	<div class="well">
+		<h2>Arama Sonuçları</h2>
+		{% for result in results %}
+		<div class="postWrapper">
+			<p><a href="/sirketler/{{ result.companyslug }}">{{ result.companyname }}</a> <span class="sector">({{ result.sector }})</span></p>
+		</div>
+		{% endfor %}
+		
+	</div>
+</div>
+{% endblock %}

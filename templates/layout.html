@@ -57,6 +57,16 @@
 							<a href="/logout/" class="btn btn-success pull-right">Çıkış Yap</a>
 						{% else %}
 							{% block loginform %}
+							<a href="#lostpass" role="button" class="btn btn-success pull-right" style="margin-left:4px;" data-toggle="modal" data-target="#lostpass">Şifremi Unuttum!</a>
+							<form action="/login/" method="post" class="form-inline pull-right loginform">{% csrf_token %}
+								{% for field in auth_form %}
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-{{ field.name }}"></i></span>
+									{{ field }}
+								</div>
+								{% endfor %}
+								<button type="submit" class="btn btn-success">Giriş Yap</button>
+							</form>
 							{% endblock %}
 						{% endif %}
 					</div>
