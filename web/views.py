@@ -8,6 +8,7 @@ from web.forms import CreateUserForm, AuthForm, CompanyForm
 from django.db import IntegrityError
 from django.http import Http404
 from django.http import HttpResponse
+import string
 
 def authform(request):
 	return{
@@ -59,32 +60,55 @@ def companines(request, companyname=""):
 			company = Company.objects.get(companyslug=companyname)
 		except Company.DoesNotExist:
 			raise Http404
+		form = CompanyForm()
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
-		return render(request, 'web/company.html', {'posts':posts, 'company':company})
+		return render(request, 'web/company.html', {'posts':posts, 'company':company},
+			context_instance=RequestContext(request, processors=[authform]))
 	else:
 		try:
+			listcompanies = Company.objects.all().order_by('companyname')[:8]
 			if request.method == 'POST':
 				form = CompanyForm(request.POST)
 				if form.is_valid():
 					form.clean()
 					form.save()
 					return redirect('/')
+				else:
+					formerrors = form.errors
+					return render(request, 'web/companies.html', {'companyform':form, 'errors': formerrors, 'companies':listcompanies},
+						context_instance=RequestContext(request, processors=[authform]))
 			else:
-				listcompanies = Company.objects.all().order_by('companyname')[:8]
 				form = CompanyForm()
-
-			return render_to_response('web/companies.html',{'companyform':form, 'companies':listcompanies},context_instance=RequestContext(request, processors=[authform]))
-
+			return render_to_response('web/companies.html',{'companyform':form, 'companies':listcompanies},
+				context_instance=RequestContext(request, processors=[authform]))
 		except IntegrityError:
 			message = 'Bu şirket daha önce eklenmiş..'
-			return render(request, 'web/companies.html',{'companyform':form, 'message': message,})
+			return render(request, 'web/companies.html',{'companyform':form, 'companies':listcompanies, 'message': message,})
 
 def search(request):
 	if 'q' in request.GET and request.GET['q']:
 		q = request.GET['q']
 		results = Company.objects.filter(companyname__icontains=q)
-		return render(request, 'web/search.html', {'results':results,})
+		return render(request, 'web/search.html', {'results':results, 'q':q,},
+			context_instance=RequestContext(request, processors=[authform]))
 	else:
 		message = 'Aramak için bir şeyler yazın'
 		return HttpResponse(message)
+
+
+def sectors(request):
+	letters = list(set([x for x in string.uppercase+string.digits]))
+	letters.sort()
+	if 'q' in request.GET and request.GET['q']:
+		q = request.GET['q']
+		sectorList = Sector.objects.filter(sectorname__istartswith=q)
+		return render(request, 'web/sectors.html', {'letters': letters, 'sectorList': sectorList, 'q':q,},
+			context_instance=RequestContext(request, processors=[authform]))
+	else:
+		return redirect('/sektorler/?q=A')
+
+
+						
+
+
 

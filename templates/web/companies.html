@@ -8,14 +8,18 @@
 		<h2>Şirketler</h2>
 		<ul>
 		{% for company in companies %}
-			<li>{{ company.companyname }} <span class="sector">({{ company.sector }})</span></li>
+			<li><a href="/sirketler/{{company.companyslug}}">{{ company.companyname }}</a> <span class="sector">({{ company.sector }})</span></li>
 		{% endfor %}
 		</ul>
 	</div>
+	{% if user.is_authenticated %}
 	<div class="well span6">
 		<h2>Şirketler eksik kalmış hacı!</h2>
 		<form method="post" action="">{% csrf_token %}
 			{{ companyform.non_field_errors }}
+			{% for formerror in formerrors %}
+			{{ formerror }}
+			{% endfor %}
 			{{ message }}
 			{% for sector in companyform %}
 			<label>{{ sector.label }}</label>
@@ -28,5 +32,11 @@
 			</div>
 		</form>
 	</div>
+	{% else %}
+	<div class="well span6">
+		<h2>Şirketler eksik kalmış hacı!</h2>
+		<p>Sadece üyeler şirket ekleyebilir, üye olun veya giriş yapın!</p>
+	</div>
+	{% endif %}
 </div>
 {% endblock %}
