@@ -50,7 +50,7 @@
 		<h3>Son yazılanlar</h3>
 		{% for row in latests %}
 		<div class="postWrapper">
-			<a class="avatar" href="http://www.gravatar.com/emails" target="_blank" title="gravatar.com'dan avatarınızı değiştirin!">
+			<a class="avatar" href="{{ row.gravatar_url }}" target="_blank" title="{{ row.author.first_name }} {{ row.author.last_name }}">
 				{% if not row.gravatar_url %}
 				<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
 				{% else %}

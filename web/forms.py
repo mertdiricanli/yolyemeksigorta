@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.html import strip_tags
 from django import forms
-from web.models import Sector, Company
+from web.models import Sector, Company, Category, Post
 from django.template.defaultfilters import slugify
 
 class CreateUserForm(UserCreationForm):
@@ -49,3 +49,22 @@ class CompanyForm(forms.ModelForm):
 			if f != '__all__':
 				self.fields[f].widget.attrs.update({'placeholder': strip_tags(error)})
 		return form
+
+class PostForm(forms.ModelForm):
+	category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Kategori Seçiniz", label="Kategori")
+	content =forms.CharField(widget=forms.widgets.Textarea(attrs={'rows':4}), label="Yorumunuz")
+	class Meta:
+		model = Post
+		exclude = ['company','author', 'timestamp']
+
+	def __init__(self, user, *args, **kwargs):
+		self.user = user
+		super(PostForm, self).__init__(*args, **kwargs)
+
+	def is_valid(self):
+		form = super(PostForm,self).is_valid()
+		for f, error in self.errors.iteritems():
+			if f != '__all__':
+				self.fields[f].widget.attrs.update({'placeholder': strip_tags(error)})
+		return form
+

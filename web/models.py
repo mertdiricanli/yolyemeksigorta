@@ -35,13 +35,13 @@ class Post(models.Model):
 	content = models.TextField()
 	timestamp = models.DateField(auto_now_add=True)
 	def gravatar_url(self):
-		return "http://www.gravatar.com/avatar/%s?s=50" % hashlib.md5(self.author.email).hexdigest()
+		return "http://www.gravatar.com/avatar/%s?s=50&d=mm" % hashlib.md5(self.author.email).hexdigest()
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User)
 	follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
 	def gravatar_url(self):
-		return "http://www.gravatar.com/avatar/%s?s=50" % hashlib.md5(self.user.email).hexdigest()
+		return "http://www.gravatar.com/avatar/%s?s=50&d=mm" % hashlib.md5(self.user.email).hexdigest()
 
 
 

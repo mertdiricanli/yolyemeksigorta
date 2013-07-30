@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from web.forms import CreateUserForm, AuthForm, CompanyForm
+from web.forms import CreateUserForm, AuthForm, CompanyForm, PostForm
 from django.db import IntegrityError
 from django.http import Http404
 from django.http import HttpResponse
@@ -60,9 +60,22 @@ def companines(request, companyname=""):
 			company = Company.objects.get(companyslug=companyname)
 		except Company.DoesNotExist:
 			raise Http404
-		form = CompanyForm()
+		if request.method == 'POST':
+			form = PostForm(request.user, request.POST)
+			if form.is_valid():
+				myform = form.save(commit=False)
+				myform.author = request.user
+				myform.company = company
+				myform.clean()
+				myform.save()
+				return redirect('/')
+			else:
+				return render(request, 'web/company.html', {'company':company, 'form': form},
+					context_instance=RequestContext(request, processors=[authform]))
+		else:
+			form = PostForm(request.user)
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
-		return render(request, 'web/company.html', {'posts':posts, 'company':company},
+		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form},
 			context_instance=RequestContext(request, processors=[authform]))
 	else:
 		try:

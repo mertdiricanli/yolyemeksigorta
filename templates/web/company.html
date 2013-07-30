@@ -9,7 +9,7 @@
 			<h3>{{ company.companyname }} hakkında son yazılanlar</h3>
 			{% for row in posts %}
 			<div class="postWrapper">
-				<a class="avatar" href="http://www.gravatar.com/emails" target="_blank" title="gravatar.com'dan avatarınızı değiştirin!">
+				<a class="avatar" href="{{ row.gravatar_url }}" target="_blank" title="{{ row.author.first_name }} {{ row.author.last_name }}">
 					{% if not row.gravatar_url %}
 					<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
 					{% else %}
@@ -26,6 +26,30 @@
 			<h3>{{ company.companyname }} hakkında hiç yorum yazılmamış.</h3>
 			<p>İlk yazan siz olun!</p>
 		{% endif %}
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="well span6">
+		<h3>Söyleyeceklerim var!</h3>
+		{% if user.is_authenticated %}
+			<form action="" method="post">{% csrf_token %}
+				{{ form.non_field_errors }}
+				{% for field in form %}
+				<label>{{ field.label }}</label>
+				<div class="controls">
+					{{ field }}
+				</div>
+				{% endfor %}
+				<div class="controls">
+					<button type="submit" class="btn btn-success">Ekle!</button>
+				</div>
+			</form>
+		{% else %}
+			<p>Sadece üyeler yorum ekleyebilir, <a href="/">üye olun</a> veya giriş yapın!</p>
+		{% endif %}
+	</div>
+	<div class="well span6">
+		
 	</div>
 </div>
 {% endblock %}
