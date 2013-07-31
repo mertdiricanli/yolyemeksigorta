@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 	url(r'^sirketler/$', 'web.views.companines'),
 	url(r'^sirketler/(?P<companyname>[-\w]+)/$', 'web.views.companines'),
 	url(r'^sektorler/$', 'web.views.sectors'),
+	url(r'^sektorler/(?P<sectorname>[-\w]+)$', 'web.views.sectors'),
 	url(r'^search/$', 'web.views.search'),
 	# Examples:
 	# url(r'^$', 'yolyemeksigorta.views.home', name='home'),

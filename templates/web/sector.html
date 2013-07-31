@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+	<div class="well span6">
+		<h3>{{ sector.sectorname }} Sektöründeki Şirketler</h3>
+		<ul>
+			{% for company in sectorCompanies %}
+			<li><a href="/sirketler/{{company.companyslug}}">{{ company.companyname }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endblock %}

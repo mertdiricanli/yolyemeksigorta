@@ -16,7 +16,7 @@
 		{% if sectorList %}
 			{% for sector in sectorList %}
 				<div class="postWrapper">
-					<p><strong>{{ sector.sectorname }}</strong></p>
+					<p><a href="/sektorler/{{ sector.sectorslug }}">{{ sector.sectorname }}</a></p>
 				</div>
 			{% endfor %}
 		{% else %}

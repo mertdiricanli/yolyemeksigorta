@@ -75,7 +75,8 @@ def companines(request, companyname=""):
 		else:
 			form = PostForm(request.user)
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
-		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form},
+		sectorCompanies = Company.objects.filter(sector=company.sector.id)[:4]
+		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form, 'sectorCompanies':sectorCompanies},
 			context_instance=RequestContext(request, processors=[authform]))
 	else:
 		try:
@@ -109,19 +110,26 @@ def search(request):
 		return HttpResponse(message)
 
 
-def sectors(request):
-	letters = list(set([x for x in string.uppercase+string.digits]))
-	letters.sort()
-	if 'q' in request.GET and request.GET['q']:
-		q = request.GET['q']
-		sectorList = Sector.objects.filter(sectorname__istartswith=q)
-		return render(request, 'web/sectors.html', {'letters': letters, 'sectorList': sectorList, 'q':q,},
+def sectors(request, sectorname=""):
+	if sectorname:
+		try:
+			sector = Sector.objects.get(sectorslug=sectorname)
+			sectorCompanies = Company.objects.filter(sector=sector.id)
+		except Sector.DoesNotExist:
+			raise Http404
+
+		return render(request, 'web/sector.html', {'sectorCompanies':sectorCompanies, 'sector':sector},
 			context_instance=RequestContext(request, processors=[authform]))
 	else:
-		return redirect('/sektorler/?q=A')
-
-
-						
+		letters = list(set([x for x in string.uppercase+string.digits]))
+		letters.sort()
+		if 'q' in request.GET and request.GET['q']:
+			q = request.GET['q']
+			sectorList = Sector.objects.filter(sectorname__istartswith=q)
+			return render(request, 'web/sectors.html', {'letters': letters, 'sectorList': sectorList, 'q':q,},
+				context_instance=RequestContext(request, processors=[authform]))
+		else:
+			return redirect('/sektorler/?q=A')	
 
 
 
