@@ -75,7 +75,7 @@ def companines(request, companyname=""):
 		else:
 			form = PostForm(request.user)
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
-		sectorCompanies = Company.objects.filter(sector=company.sector.id)[:4]
+		sectorCompanies = Company.objects.filter(sector=company.sector.id).order_by('?').exclude(pk=company.id)[:3]
 		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form, 'sectorCompanies':sectorCompanies},
 			context_instance=RequestContext(request, processors=[authform]))
 	else:
@@ -131,5 +131,13 @@ def sectors(request, sectorname=""):
 		else:
 			return redirect('/sektorler/?q=A')	
 
-
-
+def users(request, username=""):
+	if username:
+		try:
+			myuser = User.objects.get(username=username)
+		except User.DoesNotExist:
+			raise Http404
+		userPosts = Post.objects.filter(author=myuser.id)
+		return render(request, 'web/user.html', {'myuser':myuser, 'userPosts':userPosts},
+			context_instance=RequestContext(request, processors=[authform]))
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

@@ -44,4 +44,3 @@ class UserProfile(models.Model):
 		return "http://www.gravatar.com/avatar/%s?s=50&d=mm" % hashlib.md5(self.user.email).hexdigest()
 
 
-

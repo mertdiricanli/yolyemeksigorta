@@ -3,6 +3,7 @@
 .avatar{float:left; margin:0 5px 0 0px;}
 span.name{font-weight:bold;}
 span.time{float:right; color:#999; font-size:12px;}
+span.username{color:#999; font-size:12px;}
 .loginform{margin:0px;}
 .loginform .input-prepend{margin:5px 0 0 0px;}
 .control-group{float:left; margin:0 4px 0 0px;}

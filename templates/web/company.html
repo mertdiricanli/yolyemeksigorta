@@ -18,19 +18,19 @@
 				</tr>
 			</tbody>
 		</table>
-		<h3>Sektördeki popüler şirketler</h3>
-		<table class="table">
+		{% if sectorCompanies.count > 0 %}
+		<h3>Sektördeki diğer şirketler</h3>
+		<table class="table" style="margin-bottom:0px;">
 			<tbody>
 			{% for sectorCompany in sectorCompanies %}
-				{% if not sectorCompany == company %}
 				<tr>
-					<td>{{ sectorCompany.companyname }}</td>
+					<td><a href="/sirketler/{{ sectorCompany.companyslug }}">{{ sectorCompany.companyname }}</a></td>
 					<td></td>
 				</tr>
-				{% endif %}
 			{% endfor %}
 			</tbody>
 		</table>
+		{% endif %}
 	</div>
 	<div class="well span6">
 		<h3>Söyleyeceklerim var!</h3>

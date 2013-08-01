@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 	url(r'^sektorler/$', 'web.views.sectors'),
 	url(r'^sektorler/(?P<sectorname>[-\w]+)$', 'web.views.sectors'),
 	url(r'^search/$', 'web.views.search'),
+	url(r'^(?P<username>[-\w]+)/$', 'web.views.users'),
 	# Examples:
 	# url(r'^$', 'yolyemeksigorta.views.home', name='home'),
 	# url(r'^yolyemeksigorta/', include('yolyemeksigorta.foo.urls')),

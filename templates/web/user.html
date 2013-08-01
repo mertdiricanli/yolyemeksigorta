@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}
+	Şartlarda anlaşabilirsek seve seve çalışırım hacı!
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+	<div class="well">
+		<a class="avatar" href="{{ myuser.gravatar_url }}" target="_blank" title="{{ myuser.first_name }} {{ myuser.last_name }}">
+			<img class="avatar" src="{{ myuser.profile.gravatar_url }}">
+		</a>
+		<span class="name">{{ myuser.first_name }} {{ myuser.last_name }}</span>
+		<p><span class="username">{{ myuser.username }}</span></p>
+	</div>
+	<div class="well">
+		<h3>{{ myuser.first_name }} {{ myuser.last_name }} adlı kişinin son gönderileri</h3>
+		{% for post in userPosts %}
+		<div class="postWrapper">
+			<a class="avatar" href="/{{ post.author.username }}" target="_blank" title="{{ post.author.first_name }} {{ post.author.last_name }}">
+				<img class="avatar" src="{{ post.gravatar_url }}">
+			</a>
+			<span class="name"><a href="/{{ post.author.username }}">{{ post.author.first_name }} {{ post.author.last_name }}</a></span>
+			<span class="time">{{ post.timestamp }}</span>
+			<p><strong><a href="/sirketler/{{ post.company.companyslug }}">{{ post.company.companyname }}</a>, {{ post.category }}: </strong>{{ post.content }}</p>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

@@ -50,7 +50,7 @@
 		<h3>Son yazılanlar</h3>
 		{% for row in latests %}
 		<div class="postWrapper">
-			<a class="avatar" href="{{ row.gravatar_url }}" target="_blank" title="{{ row.author.first_name }} {{ row.author.last_name }}">
+			<a class="avatar" href="/{{ row.author.username }}" target="_blank" title="{{ row.author.first_name }} {{ row.author.last_name }}">
 				{% if not row.gravatar_url %}
 				<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
 				{% else %}
@@ -58,7 +58,7 @@
 				{% endif %}
 				
 			</a>
-			<span class="name">{{ row.author.first_name }} {{ row.author.last_name }}</span>
+			<span class="name"><a href="/{{ row.author.username }}">{{ row.author.first_name }} {{ row.author.last_name }}</a></span>
 			<span class="time">{{ row.timestamp }}</span>
 			<p><strong><a href="/sirketler/{{ row.company.companyslug }}">{{ row.company.companyname }}</a>, {{ row.category }}: </strong>{{ row.content }}</p>
 		</div>
