@@ -52,15 +52,14 @@
 		<div class="postWrapper">
 			<a class="avatar" href="/{{ row.author.username }}" target="_blank" title="{{ row.author.first_name }} {{ row.author.last_name }}">
 				{% if not row.gravatar_url %}
-				<img class="avatar" src="{{ MEDIA_URL }}/img/avatar.jpg">
+				<img class="avatar img-circle" src="{{ MEDIA_URL }}/img/avatar.jpg">
 				{% else %}
-				<img class="avatar" src="{{ row.gravatar_url }}">
+				<img class="avatar img-circle" src="{{ row.gravatar_url }}">
 				{% endif %}
-				
 			</a>
 			<span class="name"><a href="/{{ row.author.username }}">{{ row.author.first_name }} {{ row.author.last_name }}</a></span>
 			<span class="time">{{ row.timestamp }}</span>
-			<p><strong><a href="/sirketler/{{ row.company.companyslug }}">{{ row.company.companyname }}</a>, {{ row.category }}: </strong>{{ row.content }}</p>
+			<p><strong><a href="/sirketler/{{ row.company.companyslug }}">{{ row.company.companyname }}</a>	<br> {{ row.category }}: </strong>{{ row.content }}</p>
 		</div>
 		{% endfor %}
 	</div>

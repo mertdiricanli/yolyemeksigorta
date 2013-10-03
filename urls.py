@@ -25,7 +25,16 @@ urlpatterns = patterns('',
 	# url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
 	# Uncomment the next line to enable the admin:
-	url(r'^admin/', include(admin.site.urls)),
+	url(r'^a/admin/', include(admin.site.urls)),
 	url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT}),
+
+	# Django Password Reset
+	url(r'^user/password/reset/$', 'django.contrib.auth.views.password_reset',
+		{'post_reset_redirect' : '/user/password/reset/done'}, name='password_reset'),
+	url(r'^user/password/reset/done/$', 'django.contrib.auth.views.password_reset_done'),
+	url(r'^user/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
+		'django.contrib.auth.views.password_reset_confirm',
+		{'post_reset_redirect' : '/user/password/done/'}),
+	url(r'^user/password/done/$', 'django.contrib.auth.views.password_reset_complete'),
 
 )
