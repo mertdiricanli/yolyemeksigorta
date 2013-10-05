@@ -70,14 +70,12 @@ def companines(request, companyname=""):
 				myform.save()
 				return redirect('/')
 			else:
-				return render(request, 'web/company.html', {'company':company, 'form': form},
-					context_instance=RequestContext(request, processors=[authform]))
+				return render(request, 'web/company.html', {'company':company, 'form': form})
 		else:
 			form = PostForm(request.user)
 		posts = Post.objects.filter(company=company.id).order_by('-timestamp')
 		sectorCompanies = Company.objects.filter(sector=company.sector.id).order_by('?').exclude(pk=company.id)[:3]
-		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form, 'sectorCompanies':sectorCompanies},
-			context_instance=RequestContext(request, processors=[authform]))
+		return render(request, 'web/company.html', {'posts':posts, 'company':company, 'form': form, 'sectorCompanies':sectorCompanies})
 	else:
 		try:
 			listcompanies = Company.objects.all().order_by('companyname')[:8]
@@ -89,12 +87,10 @@ def companines(request, companyname=""):
 					return redirect('/')
 				else:
 					formerrors = form.errors
-					return render(request, 'web/companies.html', {'companyform':form, 'errors': formerrors, 'companies':listcompanies},
-						context_instance=RequestContext(request, processors=[authform]))
+					return render(request, 'web/companies.html', {'companyform':form, 'errors': formerrors, 'companies':listcompanies})
 			else:
 				form = CompanyForm()
-			return render_to_response('web/companies.html',{'companyform':form, 'companies':listcompanies},
-				context_instance=RequestContext(request, processors=[authform]))
+			return render(request, 'web/companies.html',{'companyform':form, 'companies':listcompanies})
 		except IntegrityError:
 			message = 'Bu şirket daha önce eklenmiş..'
 			return render(request, 'web/companies.html',{'companyform':form, 'companies':listcompanies, 'message': message,})
@@ -103,8 +99,7 @@ def search(request):
 	if 'q' in request.GET and request.GET['q']:
 		q = request.GET['q']
 		results = Company.objects.filter(companyname__icontains=q)
-		return render(request, 'web/search.html', {'results':results, 'q':q,},
-			context_instance=RequestContext(request, processors=[authform]))
+		return render(request, 'web/search.html', {'results':results, 'q':q,})
 	else:
 		message = 'Aramak için bir şeyler yazın'
 		return HttpResponse(message)
@@ -118,16 +113,14 @@ def sectors(request, sectorname=""):
 		except Sector.DoesNotExist:
 			raise Http404
 
-		return render(request, 'web/sector.html', {'sectorCompanies':sectorCompanies, 'sector':sector},
-			context_instance=RequestContext(request, processors=[authform]))
+		return render(request, 'web/sector.html', {'sectorCompanies':sectorCompanies, 'sector':sector})
 	else:
 		letters = list(set([x for x in string.uppercase+string.digits]))
 		letters.sort()
 		if 'q' in request.GET and request.GET['q']:
 			q = request.GET['q']
 			sectorList = Sector.objects.filter(sectorname__istartswith=q)
-			return render(request, 'web/sectors.html', {'letters': letters, 'sectorList': sectorList, 'q':q,},
-				context_instance=RequestContext(request, processors=[authform]))
+			return render(request, 'web/sectors.html', {'letters': letters, 'sectorList': sectorList, 'q':q,})
 		else:
 			return redirect('/sektorler/?q=A')	
 
@@ -138,6 +131,5 @@ def users(request, username=""):
 		except User.DoesNotExist:
 			raise Http404
 		userPosts = Post.objects.filter(author=myuser.id)
-		return render(request, 'web/user.html', {'myuser':myuser, 'userPosts':userPosts},
-			context_instance=RequestContext(request, processors=[authform]))
+		return render(request, 'web/user.html', {'myuser':myuser, 'userPosts':userPosts})
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
