@@ -14,7 +14,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'yolyemeksigorta',                      # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': 'root',                  # Not used with sqlite3.
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -124,11 +124,11 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
-TEMPLATE_CONTEXT_PROCESSOR = {
+TEMPLATE_CONTEXT_PROCESSORS = {
 	'django.contrib.auth.context_processors.auth',
 	'django.core.context_processors.media',
 	'django.core.context_processors.csrf',
-	'yolyemeksigorta.context_processors.authform',
+	'yolyemeksigorta.web.context_processors.printAuthForm',
 }
 
 # A sample logging configuration. The only tangible logging
