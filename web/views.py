@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from django.conf import settings
 from web.models import *
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
@@ -8,7 +9,15 @@ from web.forms import CreateUserForm, AuthForm, CompanyForm, PostForm
 from django.db import IntegrityError
 from django.http import Http404
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 import string
+# Google Plus OAuth
+from django.contrib import messages
+import datetime
+import json
+import urllib
+import urlparse
+from web import utils
 
 def authform(request):
 	return{
@@ -24,7 +33,9 @@ def index(request, user_form=None, auth_form=None):
 		# User not logged in
 		user_form = user_form or CreateUserForm()
 		auth_form = auth_form or AuthForm()
-		return render(request,'web/index.html',{'latests':latestposts,'user_form':user_form,'auth_form':auth_form,})
+		return render(request,'web/index.html',{'latests':latestposts,
+			'user_form':user_form,'auth_form':auth_form,})
+
 
 def signup(request):
 	user_form = CreateUserForm(data=request.POST)
@@ -53,6 +64,105 @@ def login_view(request):
 def logout_view(request):
 	logout(request)
 	return redirect('/')
+
+def google_login(request):
+	""" Google+ OAuth2 login """
+	if request.user.is_authenticated():
+		return HttpResponseRedirect('/')
+
+	if 'error' in request.GET:
+		messages.add_message(request, messages.ERROR,
+			request.GET['error'])
+		return HttpResponseRedirect('/')
+	elif 'code' in request.GET:
+		params = { \
+			'client_id': settings.GOOGLEPLUS_CLIENT_ID, \
+			'redirect_uri': settings.GOOGLE_REDIRECT_URI, \
+			'client_secret': settings.GOOGLEPLUS_CLIENT_SECRET, \
+			'code': request.GET['code'], \
+			'grant_type': 'authorization_code', \
+		}
+		req = urllib.urlopen('https://accounts.google.com/o/oauth2/token',
+			urllib.urlencode(params))
+		if req.getcode() != 200:
+			response = render_to_response('500.html', {}, \
+					context_instance=RequestContext(request))
+			response.status_code = 500
+			return response
+
+		response = req.read()
+		response_query_dict = json.loads(response)
+		access_token = response_query_dict['access_token']
+		expires_in = response_query_dict['expires_in']
+		profile = utils.api('people/me', {'access_token': access_token})
+		getemailaddress = utils.get_email_address({'access_token': access_token})
+		emailaddress = getemailaddress['email']
+		googleplus_user = _create_or_update_googleplus_user(profile, emailaddress, access_token, expires_in)
+
+		user = authenticate(googleplus_user=googleplus_user)
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				request.session.set_expiry(googleplus_user.expiry_at)
+				if 'next' in request.GET:
+					return HttpResponseRedirect(request.GET['next'])
+				return HttpResponseRedirect('/')
+			else:
+				messages.add_message(request, messages.ERROR, "Account disabled.")
+		else:
+			messages.add_message(request, messages.ERROR, "Login failed.")
+	else:
+		params = { 
+			'client_id': settings.GOOGLEPLUS_CLIENT_ID, 
+			'redirect_uri': settings.GOOGLE_REDIRECT_URI, 
+			'scope': 'https://www.googleapis.com/auth/plus.me', 
+			'scope': 'https://www.googleapis.com/auth/userinfo.email', 
+			'response_type': 'code', 
+		}
+		return HttpResponseRedirect('https://accounts.google.com/o/oauth2/auth?' +
+			urllib.urlencode(params)
+		)
+
+def _create_or_update_googleplus_user(profile, emailaddress, access_token, expires_in):
+	"""Creates or updates a Google+ user profile in local database.
+	"""
+	user_is_created = False
+	try:
+		googleplus_user = GooglePlusUser.objects.get(googleplus_id=profile['id'])
+	except GooglePlusUser.DoesNotExist:
+		first_name, last_name = _get_first_and_last_name(profile['displayName'])
+		user = User.objects.create( \
+			first_name=first_name,
+			last_name=last_name,
+			email=emailaddress,
+			username='gplus_' + profile['id']
+		)
+		user_is_created = True
+
+	if user_is_created:
+		googleplus_user = GooglePlusUser()
+		googleplus_user.googleplus_id = profile['id']
+		googleplus_user.user = user
+	else:
+		first_name, last_name = _get_first_and_last_name(profile['displayName'])
+		googleplus_user.user.first_name = first_name
+		googleplus_user.last_name = last_name
+
+	googleplus_user.googleplus_display_name = profile['displayName']
+	googleplus_user.access_token = access_token
+	googleplus_user.expiry_at = datetime.datetime.now() + \
+		datetime.timedelta(seconds=int(expires_in))    
+	googleplus_user.save()
+
+	return googleplus_user
+
+def _get_first_and_last_name(display_name):
+	try:
+		first_name, last_name = display_name.strip().rsplit(' ', 1)
+	except ValueError:
+		first_name = display_name
+		last_name = ''
+	return first_name, last_name
 
 def companines(request, companyname=""):
 	if companyname:
@@ -133,3 +243,10 @@ def users(request, username=""):
 		userPosts = Post.objects.filter(author=myuser.id)
 		return render(request, 'web/user.html', {'myuser':myuser, 'userPosts':userPosts})
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+
+
+
+
+
+

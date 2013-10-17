@@ -17,6 +17,7 @@ urlpatterns = patterns('',
 	url(r'^sektorler/(?P<sectorname>[-\w]+)$', 'web.views.sectors'),
 	url(r'^search/$', 'web.views.search'),
 	url(r'^(?P<username>[-\w]+)/$', 'web.views.users'),
+	url(r'^googleplus/login/$', 'web.views.google_login', name="googleplus_login"),
 	# Examples:
 	# url(r'^$', 'yolyemeksigorta.views.home', name='home'),
 	# url(r'^yolyemeksigorta/', include('yolyemeksigorta.foo.urls')),

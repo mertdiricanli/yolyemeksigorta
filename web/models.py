@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import hashlib
 from django.template.defaultfilters import slugify
-from utils import downcode
+from yolyemeksigorta.utils import downcode
 
 class Sector(models.Model):
 	sectorname = models.CharField(max_length=200)
@@ -43,4 +43,15 @@ class UserProfile(models.Model):
 	def gravatar_url(self):
 		return "http://www.gravatar.com/avatar/%s?s=50&d=mm" % hashlib.md5(self.user.email).hexdigest()
 
+class GooglePlusUser(models.Model):
+	"""Stores Google+ user specific details. 
+	"""
+	user = models.OneToOneField(User)
+	access_token = models.TextField()
+	expiry_at = models.DateTimeField(null=True)
+	googleplus_id = models.CharField(max_length=100, unique=True, db_index=True)
+	googleplus_display_name = models.CharField(max_length=100, unique=True, db_index=True)
+
+	def __unicode__(self):
+		return unicode(self.id) + u' | ' + unicode(self.googleplus_id)
 

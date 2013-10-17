@@ -162,19 +162,16 @@ if DEBUG:
     EMAIL_USE_TLS = False
     DEFAULT_FROM_EMAIL = 'testing@example.com'
 
+AUTHENTICATION_BACKENDS = (
+	'django.contrib.auth.backends.ModelBackend',
+	'web.backends.GooglePlusBackend',
+)
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
-
-
-
-
-
-
-
-
-
-
-
-
+GOOGLEPLUS_CLIENT_ID = '931338395256-c4hpof5bcbltk77im23s3s2lk6hfrfeu.apps.googleusercontent.com'
+GOOGLEPLUS_CLIENT_SECRET = 'GNvWrmkPGwP6DnUCx7OxyTLa'
+GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/googleplus/login/'
 
 
